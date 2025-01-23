@@ -79,6 +79,7 @@
       <div>Cognome:<span id="l_name"></span></div>
       <div>Username:<span id="username"></span></div>
       <div id="foto"></div>
+      <button onclick="giveMeYourSecret();">Let's play!</button>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -87,15 +88,6 @@
     <script>
       // Init TWA
       Telegram.WebApp.ready();
-
-      // Show main button
-      Telegram.WebApp.MainButton.setParams({
-            text: "Let's Play!"
-        });
-        Telegram.WebApp.MainButton.onClick(function () {
-            giveMeYourSecret();
-        });	
-        Telegram.WebApp.MainButton.show();
 
       const params = new URLSearchParams(Telegram.WebApp.initData);
 
