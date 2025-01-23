@@ -88,6 +88,15 @@
       // Init TWA
       Telegram.WebApp.ready();
 
+      // Show main button
+      Telegram.WebApp.MainButton.setParams({
+            text: "Let's Play!"
+        });
+        Telegram.WebApp.MainButton.onClick(function () {
+            giveMeYourSecret();
+        });	
+        Telegram.WebApp.MainButton.show();
+
       const params = new URLSearchParams(Telegram.WebApp.initData);
 
       const userData = Object.fromEntries(params);
@@ -98,7 +107,7 @@
       document.getElementById("username").innerHTML = user.username;
       document.getElementById("foto").innerHTML =
         "<img src='" + user.photo_url + "' width='100px'>";
-      Telegram.WebApp.users.getFullUser(user.id, (userInfo) => {
+      /*Telegram.WebApp.users.getFullUser(user.id, (userInfo) => {
         const info = `
                     Username: ${userInfo.username}
                     Bio: ${userInfo.bio}
@@ -107,7 +116,14 @@
                 `;
         Telegram.WebApp.showAlert(info);
       });
-      // Function to call showPopup API
+      */
+
+      function giveMeYourSecret(){
+            const userId = userData.user.id;
+            Telegram.WebApp.readTextFromClipboard((secret) => {
+                Telegram.WebApp.showAlert(secret);
+            });
+        }
 
       Telegram.WebApp.setHeaderColor("secondary_bg_color");
     </script>
