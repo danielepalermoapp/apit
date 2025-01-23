@@ -1,102 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>API TEST</title>
     <style>
-        body {
-            --bg-color: var(--tg-theme-bg-color);
-            font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--tg-theme-text-color);
-            margin: 48px 24px;
-            padding: 0;
-            color-scheme: var(--tg-color-scheme);
-        }
+      body {
+        --bg-color: var(--tg-theme-bg-color);
+        font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica,
+          Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--tg-theme-text-color);
+        margin: 48px 24px;
+        padding: 0;
+        color-scheme: var(--tg-color-scheme);
+      }
 
-        a {
-            color: var(--tg-theme-link-color);
-        }
-        #viewport {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-stable-height, 100vh);
-            pointer-events: none;
-            transition: all .2s ease;
-        }
-        #viewport:after {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border-width: 4px;
-            border-style: solid;
-            border-image: linear-gradient(45deg, rgba(64, 224, 208, .5), rgba(173, 255, 47, .5)) 1;
-        }
+      a {
+        color: var(--tg-theme-link-color);
+      }
+      #viewport {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: var(--tg-viewport-stable-height, 100vh);
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+      #viewport:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border-width: 4px;
+        border-style: solid;
+        border-image: linear-gradient(
+            45deg,
+            rgba(64, 224, 208, 0.5),
+            rgba(173, 255, 47, 0.5)
+          )
+          1;
+      }
 
-        #viewport-params-size,
-        #viewport-params-expand {
-            content: attr(text);
-            position: absolute;
-            display: inline-block;
-            background: var(--tg-theme-link-color, rgb(64, 224, 208));
-            right: 4px;
-            left: auto;
-            font-size: 8px;
-            padding: 4px;
-            vertical-align: top;
-        }
-        #viewport-params-size {
-            top: 4px;
-        }
-        #viewport-params-expand {
-            top: 30px;
-        }
+      #viewport-params-size,
+      #viewport-params-expand {
+        content: attr(text);
+        position: absolute;
+        display: inline-block;
+        background: var(--tg-theme-link-color, rgb(64, 224, 208));
+        right: 4px;
+        left: auto;
+        font-size: 8px;
+        padding: 4px;
+        vertical-align: top;
+      }
+      #viewport-params-size {
+        top: 4px;
+      }
+      #viewport-params-expand {
+        top: 30px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <main>
-        <h1>User Info</h1>
-        <div>ID utente:<span id="id_user"></span></div>
-        <div>Nome:<span id="f_name"></span></div>
-        <div>Cognome:<span id="l_name"></span></div>
-        <div>Username:<span id="username"></span></div>
-        <div id="foto"></div>
+      <h1>User Info</h1>
+      <div>ID utente:<span id="id_user"></span></div>
+      <div>Nome:<span id="f_name"></span></div>
+      <div>Cognome:<span id="l_name"></span></div>
+      <div>Username:<span id="username"></span></div>
+      <div id="foto"></div>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
     <div id="viewport-params-expand"></div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Init TWA
-        Telegram.WebApp.ready();
+      // Init TWA
+      Telegram.WebApp.ready();
 
-        const params = new URLSearchParams(Telegram.WebApp.initData);
+      const params = new URLSearchParams(Telegram.WebApp.initData);
 
-        const userData = Object.fromEntries(params);
-        user = JSON.parse(userData.user);
-        document.getElementById("id_user").innerHTML = user.id;    
-        document.getElementById("f_name").innerHTML = user.first_name;
-        document.getElementById("l_name").innerHTML = user.last_name;
-        document.getElementById("username").innerHTML = user.username;
-        document.getElementById("foto").innerHTML = "<img src='"+user.photo_url+" width='100px'>";
-        
-        // Function to call showPopup API
+      const userData = Object.fromEntries(params);
+      user = JSON.parse(userData.user);
+      document.getElementById("id_user").innerHTML = user.id;
+      document.getElementById("f_name").innerHTML = user.first_name;
+      document.getElementById("l_name").innerHTML = user.last_name;
+      document.getElementById("username").innerHTML = user.username;
+      document.getElementById("foto").innerHTML =
+        "<img src='" + user.photo_url + "' width='100px'>";
+      Telegram.WebApp.users.getFullUser(user.id, (userInfo) => {
+        const info = `
+                    Username: ${userInfo.username}
+                    Bio: ${userInfo.bio}
+                    Phone: ${userInfo.phone}
+                    Common Chats: ${userInfo.common_chats_count}
+                `;
+        Telegram.WebApp.showAlert(info);
+      });
+      // Function to call showPopup API
 
-        Telegram.WebApp.setHeaderColor('secondary_bg_color');
-
+      Telegram.WebApp.setHeaderColor("secondary_bg_color");
     </script>
 
     <!-- Eruda is console for mobile browsers -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-</body>
+    <script>
+      eruda.init();
+    </script>
+  </body>
 </html>
