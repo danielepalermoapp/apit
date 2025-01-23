@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Telegram Mini Apps Vanilla JS Sample App</title>
+    <title>API TEST</title>
     <style>
         body {
             --bg-color: var(--tg-theme-bg-color);
@@ -64,31 +64,12 @@
 
 <body>
     <main>
-        <div align="center">
-            <a href="https://ton.org/"><img width="48" src="./assets/tapps.png" alt="logo of telegram web apps"></a>
-        </div>
-        <h1>Modals</h1>
-        <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
-        <button onclick="showPopup();">Launch Popup</button>
-
-        <h1>Links</h1>
-        <ul>
-            <li>
-                <a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/trendingapps');">Open link within Telegram</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">Open link inside Telegram webview</a>
-            </li>
-        </ul>
-
-        <h1>Buttons</h1>
-        <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
-        <button onclick="toggleMainButton();">Toggle Main Button</button>
-        <button onclick="getContacts();">Show Contacts</button>
-        <button onclick="getFullUserInfo();">Get User Info</button>
+        <h1>User Info</h1>
+        <div>ID utente:<span id="id_user"></span></div>
+        <div>Nome:<span id="f_name"></span></div>
+        <div>Cognome:<span id="l_name"></span></div>
+        <div>Username:<span id="username"></span></div>
+        <div id="foto"></div>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -101,93 +82,16 @@
         const params = new URLSearchParams(Telegram.WebApp.initData);
 
         const userData = Object.fromEntries(params);
-        userData.user = alert(userData.user);
-
-        // Now userData is ready to use!
-
-        // Event occurs whenever theme settings are changed in the user's Telegram app (including switching to night mode).
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.documentElement.className = Telegram.WebApp.colorScheme;
-        });
-
-        // Show main button
-        Telegram.WebApp.MainButton.setParams({
-            text: 'Main Button'
-        });
-        Telegram.WebApp.MainButton.onClick(function () {
-            Telegram.WebApp.showAlert('Main Button was clicked')
-        });	
-        Telegram.WebApp.MainButton.show();
-
-        function getContacts() {
-            Telegram.WebApp.requestContact(function(result) {
-                if (result) {
-                    const contacts = Telegram.WebApp.contacts.getContactIDs();
-                    let message = 'Your contacts:\n';
-                    contacts.forEach(id => {
-                        const contact = Telegram.WebApp.contacts.get(id);
-                        message += `${contact.firstName} ${contact.lastName}\n`;
-                    });
-                    Telegram.WebApp.showAlert(message);
-                }
-            });
-        }
-
-        function getFullUserInfo() {
-            const userId = userData.user.id;
-            Telegram.WebApp.users.getFullUser(userId, (userInfo) => {
-                const info = `
-                    Username: ${userInfo.username}
-                    Bio: ${userInfo.bio}
-                    Phone: ${userInfo.phone}
-                    Common Chats: ${userInfo.common_chats_count}
-                `;
-                Telegram.WebApp.showAlert(info);
-            });
-        }
-
+        user = JSON.parse(userData.user);
+        document.getElementById("id_user").innerHTML = user.id;    
+        document.getElementById("f_name").innerHTML = user.first_name;
+        document.getElementById("l_name").innerHTML = user.last_name;
+        document.getElementById("username").innerHTML = user.username;
+        document.getElementById("foto").innerHTML = "<img src='"+user.photo_url+" width='100px'>";
+        
         // Function to call showPopup API
-        function showPopup() {
-            Telegram.WebApp.showPopup({
-                title: 'Title',
-                message: 'Some message',
-                buttons: [
-                    {id: 'link', type: 'default', text: 'Open ton.org'},
-                    {type: 'cancel'},
-                ]
-            }, function(btn) {
-                if (btn === 'link') {
-                    Telegram.WebApp.openLink('https://ton.org/');
-                }
-            });
-        };
-
-        // Function to toggle main TWA button
-        function toggleMainButton() {
-            if (Telegram.WebApp.MainButton.isVisible) {
-                Telegram.WebApp.MainButton.hide();
-            } else {
-                Telegram.WebApp.MainButton.show();
-            }
-        };
-
-        function setViewportData() {
-            var sizeEl = document.getElementById('viewport-params-size');
-            sizeEl.innerText = 'width: ' + window.innerWidth + ' x ' + 
-                'height: ' + Telegram.WebApp.viewportStableHeight;
-
-            var expandEl = document.querySelector('#viewport-params-expand');
-            expandEl.innerText = 'Is Expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false');
-        }
 
         Telegram.WebApp.setHeaderColor('secondary_bg_color');
-
-        setViewportData();
-        Telegram.WebApp.onEvent('viewportChanged', setViewportData);
-
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
-        });
 
     </script>
 
