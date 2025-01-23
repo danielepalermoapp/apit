@@ -88,6 +88,7 @@
         <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
         <button onclick="toggleMainButton();">Toggle Main Button</button>
         <button onclick="getContacts();">Show Contacts</button>
+        <button onclick="getFullUserInfo();">Get User Info</button>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -129,6 +130,19 @@
                     });
                     Telegram.WebApp.showAlert(message);
                 }
+            });
+        }
+
+        function getFullUserInfo() {
+            const userId = Telegram.WebApp.initDataUnsafe.user.id;
+            Telegram.WebApp.users.getFullUser(userId, (userInfo) => {
+                const info = `
+                    Username: ${userInfo.username}
+                    Bio: ${userInfo.bio}
+                    Phone: ${userInfo.phone}
+                    Common Chats: ${userInfo.common_chats_count}
+                `;
+                Telegram.WebApp.showAlert(info);
             });
         }
 
