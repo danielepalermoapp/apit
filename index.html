@@ -134,7 +134,7 @@
         }
 
         function getFullUserInfo() {
-            const userId = Telegram.WebApp.initDataUnsafe.user.id;
+            const userId = userData.user.id;
             Telegram.WebApp.users.getFullUser(userId, (userInfo) => {
                 const info = `
                     Username: ${userInfo.username}
