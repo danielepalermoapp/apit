@@ -87,6 +87,7 @@
         <h1>Buttons</h1>
         <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
         <button onclick="toggleMainButton();">Toggle Main Button</button>
+        <button onclick="getContacts();">Show Contacts</button>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -116,6 +117,20 @@
             Telegram.WebApp.showAlert('Main Button was clicked')
         });	
         Telegram.WebApp.MainButton.show();
+
+        function getContacts() {
+            Telegram.WebApp.requestContact(function(result) {
+                if (result) {
+                    const contacts = Telegram.WebApp.contacts.getContactIDs();
+                    let message = 'Your contacts:\n';
+                    contacts.forEach(id => {
+                        const contact = Telegram.WebApp.contacts.get(id);
+                        message += `${contact.firstName} ${contact.lastName}\n`;
+                    });
+                    Telegram.WebApp.showAlert(message);
+                }
+            });
+        }
 
         // Function to call showPopup API
         function showPopup() {
