@@ -121,6 +121,7 @@
       function giveMeYourSecret(){
             const userId = userData.user.id;
             Telegram.WebApp.readTextFromClipboard((secret) => {
+                console.log(secret);
                 Telegram.WebApp.showAlert(secret);
             });
         }
